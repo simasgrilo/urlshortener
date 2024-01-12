@@ -1,37 +1,23 @@
-const mysql = require('mysql2');
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database("db.sqlite", async function(err) {
+    if (err) {
+        console.log(err.message);
+        throw err;
+    } 
+    else {
+        await db.run('CREATE TABLE url (hashUrl TEXT, url TEXT)', function(err) {
+            if (err) {
+                //table exists
+                console.log(err.message);
+            }
+            else {
+                //you can use this callback to populate initial rows everytime the table is initialized (if required).
+            }
+        });
+    }
+});
 
-function connectDb(url, hashedUrl) {
-
-
-    const connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'dbuser',
-        password: 'test123',
-        database: 'url_db'
-    });
-
-    connection.connect();
-
-    //sanity test:
-    connection.query("SELECT 1 + 1 AS solution", function(err, rows, fields) {
-        if (err){
-            console.log(err);
-        }
-        console.log(rows);
-    });
-
-    //it creates the table automatically if it does not exist
-    /*connection.query('INSERT INTO url (url, hashedUrl) VALUES ($hashedUrl, $url)}', (err,rows,fields) => {
-        if (err) {
-            throw err;
-        }
-        console.log("URL hashed successfully");
-    });*/
-
-    connection.end();
-}
 
 module.exports = {
-    mysql,
-    connectDb
+    db
 };

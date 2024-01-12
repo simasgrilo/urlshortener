@@ -10,9 +10,12 @@
   ],
   "main": "webapp/index.html",
   "dependencies": {
+    "better-sqlite3": "^9.2.2",
     "express": "^4.18.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.7.0",
+    "pg-promise": "^11.5.4",
+    "sqlite3": "^5.1.7",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
