@@ -24,7 +24,7 @@ app.get('/status', (request,response) => {
     response.send(status);
 });
 
-
+"use strict";
 
 //shorten the URL: step 1
 app.post("/shorten", async (request, response) => {
@@ -88,10 +88,16 @@ app.get("/shorten", function(request, response) {
                     "message": err.message
                 })
             }
-            else {
+            else if (result) {
+                //response.setHeader("Location", result);
                 response.status(302).json({
-                    "url": result
+                    "url" : result
                 });
+            }
+            else {
+                response.status(404).json({
+                    "message": "URL not found"
+                })
             }
         });
         //error treatment below is not working due to the async nature of the db.callback.
@@ -114,6 +120,39 @@ app.get("/shorten", function(request, response) {
     catch (error) {
 
     }
+});
+
+app.delete("/shorten", function(request, response){
+    var hashedUrl = request.body["url"];
+    if (!hashedUrl) { 
+        response.status(400).send({
+            "message" : "bad request: missing 'url' parameter in body request"
+        })
+        return;
+    }
+    //check for the existence of the row: we don't need as the DMBS implements this check (i suppose, most DBMS does.)
+    var sql = "DELETE FROM url where hashUrl = ?";
+    var params = [hashedUrl];
+    db.run(sql, params, function(err,result) {
+        if (err) {
+            console.log(err.message);
+            response.status(500).json({ 
+                "message": err.message
+            });
+        }
+        else {
+            if (this.changes) {
+                response.json({
+                    "message": hashedUrl + " deleted successfully from database"
+                });
+            }
+            else {
+                response.json({
+                    "message": "URL not found to be deleted"
+                });
+            }
+        }
+    });
 });
 
 function queryDb(sql, params) {
