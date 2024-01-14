@@ -1,23 +1,17 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database("db.sqlite", async function(err) {
-    if (err) {
-        console.log(err.message);
-        throw err;
-    } 
+const DB_URL = './url.db';
+const db = new sqlite3.Database(DB_URL, (err) => {
+    if(err) {
+        return console.error(err.message);
+    }
     else {
-        await db.run('CREATE TABLE url (hashUrl TEXT, url TEXT)', function(err) {
+        db.run("CREATE TABLE url(hashUrl, origUrl)", (err) => {
             if (err) {
-                //table exists
                 console.log(err.message);
-            }
-            else {
-                //you can use this callback to populate initial rows everytime the table is initialized (if required).
             }
         });
     }
+    console.log("Connected to the " + DB_URL + " SQLite database");
+
 });
-
-
-module.exports = {
-    db
-};
+module.exports = db
