@@ -1,8 +1,8 @@
 # URL Shortener
 
-### A coding challenge suggested by John Cricket in his codingchallenge.fyi project. 
+### A coding challenge suggested by John Cricket in his [codingchallenges.fyi](https://codingchallenges.fyi/) project. 
 
-This is a url shortener developed using Express.js as the API provider and OpenUI5 (SAPUI5) to build the frontend. 
+This is a url shortener developed using [Express.js](https://expressjs.com/) to build the RESTful API server and [SAPUI5](https://sapui5.hana.ondemand.com/) to build the frontend. 
 
 To run it locally, you need Node.js, UI5 tools for VSCode and these dependencies set up in your package.json file
 
