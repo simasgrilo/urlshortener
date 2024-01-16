@@ -13,14 +13,16 @@
                 <form:formElements>
                     <form:FormElement label="URL to be shortened">
                         <Input id="originalUrl" textDirection="Inherit"></Input>
-                    </form:FormElement>
-                    <form:FormElement label="Customize your URL">
-                        <Input id="urlCustom" value="www.shortthis.com/"></Input>
-                        <Input id="urlCustomHash" value="12345678"></Input>
-                    </form:FormElement>
-                    <form:FormElement> 
                         <Button text="Hash" press="onHashPress"></Button>
                         <Button text="Delete" press="onDeletePress"></Button>
+                    </form:FormElement>
+                    <!--<form:FormElement label="Customize your URL">
+                        <Input id="urlCustom" value="www.shortthis.com/" editable="false"></Input>
+                        <Input id="urlCustomHash" value="12345678"></Input>
+                    </form:FormElement> -->
+                    <form:FormElement label="Retrive a shortened URL">
+                        <Input id="retrieveUrl" textDirection="Inherit"></Input>
+                        <Button text="Retrieve" press="onRetrievePress"/>
                     </form:FormElement>
                 </form:formElements>
             </form:FormContainer>

@@ -14,19 +14,9 @@ sap.ui.define([
 
             onHashPress : function(oEvent) {
                 var sText = this.getView().byId("originalUrl").getValue();
-                var sUrl = this.getView().byId("urlCustom").getValue();
-                var sHash = this.getView().byId("urlCustomHash").getValue();
-                if (sHash.length < 8) {
-                    window.alert("Hash must have at least 8 characters");
-                    return;
-                }
                 var oFormData = {
                     "url" : sText
                 };
-                if (sUrl && sHash) {
-                    oFormData["customUrl"] = sUrl;
-                    oFormData["customUrlHash"] = sHash;
-                }
                 var that = this;
                 //we're using AJAX requests because this ain't a ODATA service-compliant with UI5 methods.
                 $.ajax({
@@ -61,6 +51,25 @@ sap.ui.define([
                         that.setDialog(response["message"]);
                     }
                 });
+            },
+
+            onRetrievePress: function(){
+                var sText = {
+                    "url": this.getView().byId("retrieveUrl").getValue()
+                };
+                var that = this;
+                $.ajax({
+                    type: "GET",
+                    url: "/urlservice/shorten",
+                    contentType: "application/json",
+                    data: JSON.stringify(sText),
+                    success: function(){
+                        that.setDialog(response["message"]);
+                    },
+                    failure: function(){
+                        that.setDialog(response["message"]);
+                    }
+                })
             },
 
             setDialog : function(sDialogContent){

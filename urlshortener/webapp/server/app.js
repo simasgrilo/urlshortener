@@ -44,7 +44,7 @@ app.post("/shorten", async (request, response) => {
         };
         var sql = 'INSERT INTO url (hashUrl, origUrl) VALUES (?,?)';
         //params replace the parametrs in the query as per order that's in the array supplied.
-        var params = [localHost + data.hashUrl, data.url];
+        var params =  [localHost + data.hashUrl, data.url];
         err = false;
         const result = db.run(sql, params, function(err, result) {
             if (err) {
