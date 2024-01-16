@@ -89,13 +89,12 @@
           "viewType": "XML",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "App",
-          "viewName": "App"
+          "viewName": "Main"
         }
       }
     },
     "rootView": {
-      "viewName": "com.urlshortener.grilo.urlshortener.view.Main",
+      "viewName": "com.urlshortener.grilo.urlshortener.view.App",
       "type": "XML",
       "async": true
     }

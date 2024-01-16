@@ -32,7 +32,7 @@ app.post("/shorten", async (request, response) => {
     if (!content) {
         response.status(400).json({
             "error": "Invalid field: missing \'url\' key"
-        });cd
+        });
         return;
     }
     var hashCode = uuid.v5(content, uuid.v5.URL).split("-")[0];

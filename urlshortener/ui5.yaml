@@ -5,7 +5,12 @@ metadata:
   name: com.urlshortener.grilo.urlshortener
 type: application
 server:
-  customMiddleware:
+  customMiddleware: #is proxy really needed? ports does not consist in a different domain as per CORS.
+    - name: ui5-middleware-simpleproxy
+      afterMiddleware: compression
+      mountPath: /urlservice
+      configuration:
+        baseUri: "http:localhost:3001"
     - name: fiori-tools-proxy
       afterMiddleware: compression
       configuration:

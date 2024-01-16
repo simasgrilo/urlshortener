@@ -1,4 +1,4 @@
-<mvc:View xmlns:core="sap.ui.core" controllerName="com.urlshortener.grilo.urlshortener.controller.App"
+<mvc:View xmlns:core="sap.ui.core" controllerName="com.urlshortener.grilo.urlshortener.controller.Main"
     xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns="sap.m"
     xmlns:l="sap.ui.layout"
@@ -6,21 +6,21 @@
     <form:Form id="mainForm" title="URL Shortener">
         <form:layout>
             <form:ColumnLayout >
-
             </form:ColumnLayout>        
         </form:layout>   
         <form:formContainers>
             <form:FormContainer >
                 <form:formElements>
                     <form:FormElement label="URL to be shortened">
-                        <Input textDirection="Inherit"></Input>
+                        <Input id="originalUrl" textDirection="Inherit"></Input>
                     </form:FormElement>
                     <form:FormElement label="Customize your URL">
-                        <Input value="www.shortthis.com/"></Input>
-                        <Input value="1234"></Input>
+                        <Input id="urlCustom" value="www.shortthis.com/"></Input>
+                        <Input id="urlCustomHash" value="12345678"></Input>
                     </form:FormElement>
                     <form:FormElement> 
-                        <Button text="Submit" press="onSubmitPress"></Button>
+                        <Button text="Hash" press="onHashPress"></Button>
+                        <Button text="Delete" press="onDeletePress"></Button>
                     </form:FormElement>
                 </form:formElements>
             </form:FormContainer>

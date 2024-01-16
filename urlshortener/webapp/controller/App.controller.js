@@ -9,7 +9,7 @@ sap.ui.define([
 
         return Controller.extend("com.urlshortener.grilo.urlshortener.controller.App", {
             onInit: function () {
-
+                
             }
         });
     });
