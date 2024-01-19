@@ -17,6 +17,9 @@ sap.ui.define([
                 var oFormData = {
                     "url" : sText
                 };
+                if (!this._validateUrl(sText)) {
+                    return;
+                }
                 var that = this;
                 //we're using AJAX requests because this ain't a ODATA service-compliant with UI5 methods.
                 $.ajax({
@@ -36,6 +39,9 @@ sap.ui.define([
             onDeletePress: function(){
                 var sText = {
                    "url" : this.getView().byId("originalUrl").getValue()
+                }
+                if (!this._validateUrl(sText)) {
+                    return;
                 }
                 var that = this;
                 $.ajax({
@@ -57,6 +63,9 @@ sap.ui.define([
                 var sText = {
                     "url": this.getView().byId("retrieveUrl").getValue()
                 };
+                if (!this._validateUrl(sText)) {
+                    return;
+                }
                 var that = this;
                 $.ajax({
                     type: "GET",
@@ -97,6 +106,14 @@ sap.ui.define([
                     }));
                 }
                 this._oDialog.open();
+            },
+
+            _validateUrl : function(sUrl) {
+                if (!jQuery.sap.validateUrl(sUrl)) {
+                    this.setDialog("Please enter a valid URL");
+                    return false;
+                }
+                return true
             }
         });
     }
