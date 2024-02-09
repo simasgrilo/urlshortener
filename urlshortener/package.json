@@ -13,13 +13,10 @@
     "better-sqlite3": "^9.2.2",
     "bluebird": "^3.7.2",
     "express": "^4.18.2",
-    "mysql": "^2.18.1",
-    "mysql2": "^3.7.0",
-    "pg-promise": "^11.5.4",
-    "redis": "^4.6.12",
     "sqlite3": "^5.1.7",
     "ui5-middleware-simpleproxy": "^3.2.10",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@sap/ux-ui5-tooling": "1",
@@ -30,6 +27,7 @@
     "start-local": "fiori run --config ./ui5-local.yaml --open \"test/flpSandbox.html?sap-ui-xx-viewCache=false#comurlshortenergrilourlshorten-display\"",
     "build": "ui5 build --config=ui5.yaml --clean-dest --dest dist",
     "start-ui5": "ui5 serve",
+    "start-api": "cd ./webapp/server | node app.js",
     "deploy": "fiori verify",
     "deploy-config": "fiori add deploy-config",
     "start-noflp": "fiori run --open \"index.html?sap-ui-xx-viewCache=false\"",

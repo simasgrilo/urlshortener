@@ -3,13 +3,22 @@
     xmlns="sap.m"
     xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form">
-    <VBox class="sapUiSmallMargin">
         <form:Form id="mainForm" title="URL Shortener">
             <form:layout>
-                <form:ResponsiveGridLayout 
-                columnsL="1"
-                columnsM="1"
-                columnsXL="1">
+                <form:ResponsiveGridLayout
+                    labelSpanXL="4"
+                    labelSpanL="3"
+                    labelSpanM="4"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="0"
+                    emptySpanL="4"
+                    emptySpanM="0"
+                    emptySpanS="0"
+                    columnsXL="2"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false">
                 </form:ResponsiveGridLayout>        
             </form:layout>   
             <form:formContainers>
@@ -17,8 +26,8 @@
                     <form:formElements>
                         <form:FormElement label="URL to be shortened">
                             <Input id="originalUrl" textDirection="Inherit"></Input>
-                            <Button text="Hash" press="onHashPress"></Button>
-                            <Button text="Delete" press="onDeletePress"></Button>
+                            <Button text="Hash" press="onHashPress" width="100px"></Button>
+                            <Button text="Delete" press="onDeletePress" width="100px" ></Button>
                         </form:FormElement>
                         <!--<form:FormElement label="Customize your URL">
                             <Input id="urlCustom" value="www.shortthis.com/" editable="false"></Input>
@@ -26,13 +35,11 @@
                         </form:FormElement> -->
                         <form:FormElement label="Retrive a shortened URL">
                             <Input id="retrieveUrl" textDirection="Inherit"></Input>
-                            <Button text="Retrieve" press="onRetrievePress"/>
+                            <Button text="Retrieve" press="onRetrievePress" width="100px"/>
                         </form:FormElement>
                     </form:formElements>
                 </form:FormContainer>
-            </form:formContainers>
-        
+            </form:formContainers> 
         </form:Form>
-    </VBox>
     
 </mvc:View>

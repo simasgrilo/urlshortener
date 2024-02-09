@@ -1,5 +1,6 @@
 const express = require('express'); //not with a capital 'E'.
 const uuid = require('uuid');
+const winston = require('winston')
 const app = express();
 
 //local imports (i.e., not set by npm) must include the directory (not required the FQN). without it, it will assume it's in node_modules.
@@ -9,6 +10,30 @@ const db = require('./db.js');
 //app.use(express.static(__dirname));
 //below statement configures how express.js will parse request bodies for you.
 app.use(express.json());
+
+//setup a logger for further analysis:
+const logger = winston.createLogger({
+    level: "info",
+    format: winston.format.json(),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({
+            filename: String(new Date()) + "_log.log",
+            level: 'info'
+        })
+    ]
+})
+app.use((req,res,next) => {
+    logger.info({
+        method: req.method,
+        params: req.params,
+        body: req.body,
+        url: req.url,
+        statusCode: res.statusCode,
+        responseTime: Date.now() - req.startTime
+    });
+    next();
+});
 
 const port = process.env.port || 3001;
 //(): anonymous function.
@@ -66,7 +91,7 @@ app.post("/shorten", async (request, response) => {
     }    
 });
 
-app.get("/shorten", function(request, response) { 
+app.search("/shorten", function(request, response) { 
     var hashUrl = request.body["url"];
     if (!hashUrl) {
         response.status(400).json({
@@ -91,7 +116,7 @@ app.get("/shorten", function(request, response) {
             else if (result) {
                 //response.setHeader("Location", result);
                 response.status(302).json({
-                    "url" : result
+                    "message" : result
                 });
             }
             else {
@@ -100,22 +125,6 @@ app.get("/shorten", function(request, response) {
                 })
             }
         });
-        //error treatment below is not working due to the async nature of the db.callback.
-        /*if (originalUrl) { 
-            //setHeader is the same as in java and python
-            //response.setHeader("location", originalUrl);
-            response.status(302).send();
-        }*/
-        /*if (errMessage) {
-                response.status(500).json({
-                    "message": errMessage
-                })
-            }
-            else {
-                response.status(500).json({
-                    "message": "hash not found in the server. try submitting the original URL."
-                });
-        }*/
     }
     catch (error) {
 
@@ -154,27 +163,3 @@ app.delete("/shorten", function(request, response){
         }
     });
 });
-
-function queryDb(sql, params) {
-    return new Promise((resolve, reject) => {
-        db.get(sql, params, function(err, result){
-            if (err) { 
-                console.error(err.message);
-                reject(err);
-            }
-            else {
-                console.log(result.origUrl);
-                resolve(result);
-            }
-        });
-    });
-}
-
-//below callbacks could be created within the promise.
-function onSuccessQuery(result){
-    return result;
-}
-
-function onFailureQuery(err) {
-    throw err;
-}
