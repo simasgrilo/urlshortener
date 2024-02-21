@@ -77,14 +77,28 @@
       },
       "routes": [
         {
-          "name": "app",
+          "name": "login",
           "pattern": "",
+          "target": [
+            "login"
+          ]
+        },
+        {
+          "name": "main",
+          "pattern": "main",
           "target": [
             "main"
           ]
+
         }
       ],
       "targets": {
+        "login": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewName": "Login"
+        },
         "main": {
           "viewType": "XML",
           "transition": "slide",

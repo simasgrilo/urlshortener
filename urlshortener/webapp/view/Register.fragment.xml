@@ -1,0 +1,25 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form">
+    <!-- if you want your fragment as a popup, it should be a Dialog -->
+    <Dialog title="Register">
+        <content>
+        <form:SimpleForm>
+            <core:Title text="Register to use our services"></core:Title>
+            <Label text="User name"></Label>
+            <Input id="regUsername"></Input>
+            <Label text="E-mail"></Label>
+            <Input id="regEmail" type="Email"></Input>
+            <Label text="Password"></Label>
+            <Input class="pwdClass" id="regPassword" type="Password"></Input>
+        </form:SimpleForm>
+    </content>
+    <beginButton>
+        <Button text="{i18n>submitButton}"></Button>
+    </beginButton>
+    <endButton>
+        <Button text="{i18n>cancelButton}" press="onFragmentClose"></Button>
+    </endButton>
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,18 @@
+<mvc:XMLView controllerName="com.urlshortener.grilo.urlshortener.controller.Login" xmlns:mvc="sap.ui.core.mvc"
+        xmlns:form="sap.ui.layout.form"
+        xmlns="sap.m">
+        <Page title="{i18n>title}">
+            <content>
+                <form:SimpleForm>   
+                    <form:content>
+                        <Label class="label" text="UserName"/>
+                        <Input class="input" id="user" placeholder="Enter UserName"/>
+                        <Label text="Password"/>
+                        <Input class="pwdClass" id="pwd" type="Password" placeholder="Enter Password"/>
+                    </form:content>
+                <Button icon="sap-icon://visits" id="loginBtn" text="Login" type="Accept" press="onLoginClick"/>
+                <Button icon="sap-icon://add-employee" id="registerBtn" text="Register" type="Accept" press="onRegisterClick"/>
+                </form:SimpleForm>
+            </content>
+        </Page>
+</mvc:XMLView>
