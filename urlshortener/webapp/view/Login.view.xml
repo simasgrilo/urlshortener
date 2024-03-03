@@ -3,16 +3,18 @@
         xmlns="sap.m">
         <Page title="{i18n>title}">
             <content>
+                <VBox renderType="Div" alignItems="Center">
                 <form:SimpleForm>   
                     <form:content>
-                        <Label class="label" text="UserName"/>
-                        <Input class="input" id="user" placeholder="Enter UserName"/>
+                        <Label class="label" text="Username"/>
+                        <Input class="input" id="user" placeholder="Enter Username"/>
                         <Label text="Password"/>
                         <Input class="pwdClass" id="pwd" type="Password" placeholder="Enter Password"/>
                     </form:content>
                 <Button icon="sap-icon://visits" id="loginBtn" text="Login" type="Accept" press="onLoginClick"/>
                 <Button icon="sap-icon://add-employee" id="registerBtn" text="Register" type="Accept" press="onRegisterClick"/>
                 </form:SimpleForm>
+            </VBox>
             </content>
         </Page>
 </mvc:XMLView>

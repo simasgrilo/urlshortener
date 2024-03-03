@@ -13,10 +13,12 @@
             <Input id="regEmail" type="Email"></Input>
             <Label text="Password"></Label>
             <Input class="pwdClass" id="regPassword" type="Password"></Input>
+            <Label text="Confirm Password"></Label>
+            <Input class="pwdClass" id="regConfirmPass" type="Password"></Input>
         </form:SimpleForm>
     </content>
     <beginButton>
-        <Button text="{i18n>submitButton}"></Button>
+        <Button text="{i18n>submitButton}" press="onFragmentSubmit"></Button>
     </beginButton>
     <endButton>
         <Button text="{i18n>cancelButton}" press="onFragmentClose"></Button>

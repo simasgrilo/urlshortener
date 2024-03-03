@@ -13,6 +13,8 @@
     "better-sqlite3": "^9.2.2",
     "bluebird": "^3.7.2",
     "express": "^4.18.2",
+    "express-session": "^1.18.0",
+    "remix-auth": "^3.6.0",
     "sqlite3": "^5.1.7",
     "ui5-middleware-simpleproxy": "^3.2.10",
     "uuid": "^9.0.1",

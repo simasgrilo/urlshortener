@@ -1,6 +1,7 @@
 const express = require('express'); //not with a capital 'E'.
 const uuid = require('uuid');
-const winston = require('winston')
+const winston = require('winston');
+const session = require('express-session');
 const app = express();
 
 //local imports (i.e., not set by npm) must include the directory (not required the FQN). without it, it will assume it's in node_modules.
@@ -10,6 +11,14 @@ const db = require('./db.js');
 //app.use(express.static(__dirname));
 //below statement configures how express.js will parse request bodies for you.
 app.use(express.json());
+//required for session auth
+app.use(session({//secret is used to secure the session data.
+    secret: 'secret',
+    resave: true,
+    saveUnitialized: true
+}));
+
+"use strict";
 
 //setup a logger for further analysis:
 const logger = winston.createLogger({
@@ -49,8 +58,6 @@ app.get('/status', (request,response) => {
     response.send(status);
 });
 
-"use strict";
-
 //shorten the URL: step 1
 app.post("/shorten", async (request, response) => {
     var content = request.body["url"];
@@ -63,6 +70,8 @@ app.post("/shorten", async (request, response) => {
     var hashCode = uuid.v5(content, uuid.v5.URL).split("-")[0];
     const localHost = "http://localhost/";
     try {
+
+        var originalUrl = "";
         var data = {
             hashUrl: hashCode,
             url: content
@@ -162,4 +171,80 @@ app.delete("/shorten", function(request, response){
             }
         }
     });
+});
+
+/*Authentication. this can be modularized.*/ 
+
+app.post("/auth", function(request, response) {
+    var username = request.body["username"];
+    var password = request.body["password"];
+    if (username && password) {
+        //hash password
+        password = uuid.v5(password,uuid.v5.URL);
+        var params = [username, password];
+        var sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+        db.get(sql, params, function(err, result){
+            if (err) {
+                throw err;
+            }
+            if (result) {
+                request.session.loggedin = true;
+                request.session.username = username;
+                response.sendStatus(200);
+                //response.redirect("index.html");
+                //response.end();
+            }
+            else {
+                response.status(400).json({
+                    "message": "Please insert a valid username or password"
+                });
+            }
+        });
+    } else {
+        response.status(404).send("Please insert a valid username or password");
+    }
+});
+
+app.post("/register", function(request, response){
+    var username = request.body["username"];
+    var password = request.body["password"];
+    var email = request.body["email"];
+    var exists = false;
+    //check whether username exists:
+    const checkSql = "SELECT * FROM user WHERE username = ?";
+    /*db.run(checkSql, [username], function(err, result) {
+        if (result){
+            response.status(400).json({
+                "message": "Username {} already exists".format(username)
+            })
+            exists = true;
+        }
+    });
+    if (exists){
+        return;
+    }*/
+    if (username && password && email) {
+        password = uuid.v5(password, uuid.v5.URL);
+        var params = [username, password, email];
+        var insertSql = "INSERT INTO user (username, password, email) VALUES (?,?,?)";
+        db.get(insertSql, params, function(err){
+            if (err) {
+                throw err;
+            }
+            if (this.changes) {
+                response.status(200).json({
+                    "message": "Account created Successfully"
+                });
+            }
+            else {
+                response.status(500).json({
+                    "message": "Error in creating user. Please contact the system administrator"
+                });
+            }
+        });
+    } else {
+        response.status(400).json({
+            "message": "Missing either username, password or email. Please check and try again"
+        });
+    }
 });

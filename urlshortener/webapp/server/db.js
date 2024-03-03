@@ -5,7 +5,12 @@ const db = new sqlite3.Database(DB_URL, (err) => {
         return console.error(err.message);
     }
     else {
-        db.run("CREATE TABLE url(hashUrl, origUrl)", (err) => {
+        db.run("CREATE TABLE IF NOT EXISTS url(hashUrl, origUrl)", (err) => {
+            if (err) {
+                console.log(err.message);
+            }
+        });
+        db.run("CREATE TABLE IF NOT EXISTS user(username,password,email)", (err) => {
             if (err) {
                 console.log(err.message);
             }

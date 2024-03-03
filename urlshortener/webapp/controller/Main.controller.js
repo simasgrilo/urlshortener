@@ -30,7 +30,7 @@ sap.ui.define([
                     success: function(response) {
                         that.setDialog(response["shortened"]);
                     },
-                    failure: function(response) {
+                    error: function(response) {
                         that.setDialog(response["message"]);
                     }
                 });
@@ -39,6 +39,12 @@ sap.ui.define([
             onDeletePress: function(){
                 var sText = {
                    "url" : this.getView().byId("originalUrl").getValue()
+                }
+                if (!sText["url"]) {
+                    const oBundle = this.getView().getModel("i18n").getResourceBundle();
+                    const sInfoText = oBundle.getText("noDeleteParam");
+                    this.setDialog(sInfoText);
+                    return;
                 }
                 /*if (!this._validateUrl(sText)) {
                     return;
@@ -53,7 +59,7 @@ sap.ui.define([
                     success: function(response) {
                         that.setDialog(response["message"]);
                     },
-                    failure: function(response) {
+                    error: function(response) {
                         that.setDialog(response["message"]);
                     }
                 });
@@ -63,9 +69,6 @@ sap.ui.define([
                 var sText = {
                     "url": this.getView().byId("retrieveUrl").getValue()
                 };
-                /*if (!this._validateUrl(sText)) {
-                    return;
-                }*/
                 var that = this;
                 $.ajax({
                     type: "SEARCH",
@@ -83,13 +86,8 @@ sap.ui.define([
                         }
                     },
                     success: function(response){
-                        console.log("success");
-                        that.setDialog(response["message"]);
+                        that.setDialog(response.responseJSON["message"]);
                     },
-                    failure: function(response){
-                        console.log("failure");
-                        that.setDialog(response["message"]);
-                    }
                 })
             },
 
