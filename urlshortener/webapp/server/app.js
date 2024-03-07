@@ -1,7 +1,8 @@
 const express = require('express'); //not with a capital 'E'.
 const uuid = require('uuid');
 const winston = require('winston');
-const session = require('express-session');
+const session = require('cookie-session');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 //local imports (i.e., not set by npm) must include the directory (not required the FQN). without it, it will assume it's in node_modules.
@@ -11,11 +12,12 @@ const db = require('./db.js');
 //app.use(express.static(__dirname));
 //below statement configures how express.js will parse request bodies for you.
 app.use(express.json());
+
 //required for session auth
 app.use(session({//secret is used to secure the session data.
+    name: "session",
     secret: 'secret',
-    resave: true,
-    saveUnitialized: true
+    maxAge: 24 * 60 * 60 * 1000
 }));
 
 "use strict";
@@ -174,6 +176,17 @@ app.delete("/shorten", function(request, response){
 });
 
 /*Authentication. this can be modularized.*/ 
+app.get("/logon", function(request, response) {
+    //checks whether the user is authenticated.
+    var cookies = request.session;
+    if (cookies) {
+        //user already authenticated.
+        response.sendStatus(200).json({
+            "message" : "Welcome!",
+            "username": cookies["userId"]
+        }).end();
+    }
+});
 
 app.post("/auth", function(request, response) {
     var username = request.body["username"];
@@ -188,9 +201,16 @@ app.post("/auth", function(request, response) {
                 throw err;
             }
             if (result) {
-                request.session.loggedin = true;
-                request.session.username = username;
-                response.sendStatus(200);
+                sessionToken = uuid.v4();
+                session[sessionToken] = {
+                    userId: username 
+                }
+                request.session.userId = username
+                //response.cookie("session_token", session)
+                response.status(200).json({
+                    "message" : "Welcome!",
+                    "username": username
+                });
                 //response.redirect("index.html");
                 //response.end();
             }
@@ -212,17 +232,13 @@ app.post("/register", function(request, response){
     var exists = false;
     //check whether username exists:
     const checkSql = "SELECT * FROM user WHERE username = ?";
-    /*db.run(checkSql, [username], function(err, result) {
+    db.run(checkSql, [username], function(err, result) {
         if (result){
             response.status(400).json({
                 "message": "Username {} already exists".format(username)
-            })
-            exists = true;
+            }).end()
         }
     });
-    if (exists){
-        return;
-    }*/
     if (username && password && email) {
         password = uuid.v5(password, uuid.v5.URL);
         var params = [username, password, email];

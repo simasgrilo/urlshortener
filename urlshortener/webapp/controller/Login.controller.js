@@ -10,8 +10,21 @@ sap.ui.define([
     return Controller.extend("com.urlshortener.grilo.urlshortener.controller.Login", {
         _oRegisterFragment : null,
 
-        onInit: function() {
-
+        onBeforeRendering: function() {
+            var that = this;
+            $.ajax({
+                type: "GET",
+                url: "/urlservice/logon",
+                success: function(response) {
+                    that.getOwnerComponent().getRouter().navTo("main", {
+                        "username": response["username"]
+                    })
+                },
+                error: function(response) {
+                    that.setDialog(response.responseJSON["message"]);
+                },
+                async: false
+            });
         },
 
         onLoginClick : function() {
@@ -32,7 +45,10 @@ sap.ui.define([
                     contentType: "application/json",
                     data: JSON.stringify(oPayload),
                     success: function(response) {
-                        that.getOwnerComponent().getRouter().navTo("main");
+                        //need to pass the username to the next view, or get it from browser.
+                        that.getOwnerComponent().getRouter().navTo("main" ,{
+                            username : response["username"]
+                        });
                     },
                     error: function(response) {
                         //failure error is not prompting the dialog.
@@ -49,7 +65,7 @@ sap.ui.define([
                 );
             }
         },
-
+        
         onRegisterClick : function() {
             //opens a register fragment and registers the user if valid.
             if (!this._oRegisterFragment) {

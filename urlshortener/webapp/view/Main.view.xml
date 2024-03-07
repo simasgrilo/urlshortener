@@ -20,7 +20,14 @@
                     columnsM="1"
                     singleContainerFullSize="false">
                 </form:ResponsiveGridLayout>        
-            </form:layout>   
+            </form:layout>
+            <form:toolbar>
+                <Toolbar>
+                    <Title text="URL Shortener"/>
+                    <ToolbarSpacer/>
+                    <Button id="displayHash" text="Hashes" icon="sap-icon://drop-down-list" width="100px" ></Button>
+                </Toolbar>
+            </form:toolbar>
             <form:formContainers>
                 <form:FormContainer >
                     <form:formElements>
