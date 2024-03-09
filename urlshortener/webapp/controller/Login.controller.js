@@ -52,7 +52,12 @@ sap.ui.define([
                     },
                     error: function(response) {
                         //failure error is not prompting the dialog.
-                        that.setDialog(response.responseJSON["message"]);
+                        if (response.responseJSON){
+                            that.setDialog(response.responseJSON["message"]);
+                        }
+                        else {
+                            that.setDialog(response.responseText);
+                        }
                     }
 
                 });
@@ -106,7 +111,7 @@ sap.ui.define([
                     contentType: "application/json",
                     data: JSON.stringify(oPayload),
                     success: function(response) {
-                        that.setDialog(response.responseJSON["message"]);
+                        that.setDialog(response["message"]);
                     },
                     error: function(response) {
                         //failure error is not prompting the dialog.

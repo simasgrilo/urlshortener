@@ -6,7 +6,7 @@ const db = new sqlite3.Database(DB_URL, (err) => {
         return console.error(err.message);
     }
     else {
-        db.run('CREATE TABLE IF NOT EXISTS user(\
+        db.run('CREATE TABLE user(\
                   username TEXT,\
                   password TEXT,\
                   email TEXT)', (err) => {
@@ -14,7 +14,7 @@ const db = new sqlite3.Database(DB_URL, (err) => {
                 console.log(err.message);
             }
         });
-        db.run("CREATE TABLE IF NOT EXISTS url(\
+        db.run("CREATE TABLE url(\
                  hashUrl TEXT,\
                  origUrl TEXT,\
                  username TEXT,\
@@ -23,6 +23,7 @@ const db = new sqlite3.Database(DB_URL, (err) => {
                 console.log(err.message);
             }
         });
+        
     }
     console.log("Connected to the " + DB_URL + " SQLite database");
 

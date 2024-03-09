@@ -8,16 +8,30 @@ sap.ui.define([
     function(Controller, Label, Dialog, Button, Text) {
         "use strict";
         return Controller.extend("com.urlshortener.grilo.urlshortener.controller.Main", {
-            onInit : function() {
+            _sUser : null,
 
+            onInit : function() {
+                var oRouter = this.getOwnerComponent().getRouter();
+                oRouter.attachRouteMatched(this.onRouteMatched, this);
+            },
+
+            onRouteMatched: function(oEvent) {
+                //triggers when this controller is acessed via routing.
+                var oArguments = oEvent.getParameter("arguments");
+                this._sUser = oArguments["user"];
+                console.log(this._sUser);
             },
 
             onHashPress : function(oEvent) {
+
                 var sText = this.getView().byId("originalUrl").getValue();
                 var oFormData = {
                     "url" : sText
                 };
-                if (!this._validateUrl(sText)) {
+                if (!this._validateUrl(sText) || !sText) {
+                    var oBundle = this.getView().getModel("i18n").getResourceBundle();
+                    var sValueMessage = oBundle.getText("missingHashText");
+                    this.SetDialog(sValueMessage);
                     return;
                 }
                 var that = this;
@@ -83,12 +97,44 @@ sap.ui.define([
                         404: function(response){
                             console.log("failure");
                             that.setDialog(response.responseJSON['message']);
+                        },
+                        500: function(response){
+                            that.setDialog(response.responseJSON['message']);
                         }
                     },
                     success: function(response){
                         that.setDialog(response.responseJSON["message"]);
                     },
+                    error: function (response) {
+                        that.setDialog(response["responseText"]);
+                    }
                 })
+            },
+            
+            onListPress : function() {
+                //this should be in the onBeforeRender of the List controller.
+                var body = {
+                    "user" : this._sUser
+                }
+                var that = this;
+                $.ajax({
+                    type: "SEARCH",
+                    data: JSON.stringify(body),
+                    url: "/urlservice/urlcollection",
+                    contentType: "application/json",
+                    success: function(response) {
+                        var oModel = new sap.ui.model.json.JSONModel();
+                        oModel.setData(response);
+                        //bind the model to the core, not to the view.
+                        //sap.ui.getCore().setModel(oModel);
+                        that.getView().setModel(oModel);
+                        that._listFragment()
+                    },
+                    error: function(response) {
+
+                    }
+
+                });
             },
 
             setDialog : function(sDialogContent){
@@ -100,7 +146,6 @@ sap.ui.define([
                             text : sDialogContent
                         }),
                         beginButton : new Button({
-                            buttonType : "Emphasized",
                             text : "OK",
                             press: function () {
                                 //you need to refer the parent as the button's context is within the _oDialog itself
@@ -124,7 +169,22 @@ sap.ui.define([
                     return false;
                 }
                 return true
+            },
+
+            _listFragment : function() {
+                //opens a register fragment and registers the user if valid.
+                if (!this._oListFragment) {
+                    this._oListFragment = sap.ui.xmlfragment(this.getView().getId(),"com.urlshortener.grilo.urlshortener.view.List", this);
+                    var oTable = this.getView().byId("urlList")
+                    this.getView().addDependent(this._oListFragment);
+                }
+                this._oListFragment.open();
+            },
+
+            onListCancelPress: function() {
+                this.getView().byId("urlListCancel").getParent().close();
             }
         });
-    }
+    },
+    
 );

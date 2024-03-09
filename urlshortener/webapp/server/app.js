@@ -72,17 +72,16 @@ app.post("/shorten", async (request, response) => {
     var hashCode = uuid.v5(content, uuid.v5.URL).split("-")[0];
     const localHost = "http://localhost/";
     try {
-
-        var originalUrl = "";
         var data = {
             hashUrl: hashCode,
-            url: content
+            url: content,
+            user: session["userId"]
         };
-        var sql = 'INSERT INTO url (hashUrl, origUrl) VALUES (?,?)';
+        var sql = 'INSERT INTO url (hashUrl, origUrl, username) VALUES (?,?,?)';
         //params replace the parametrs in the query as per order that's in the array supplied.
-        var params =  [localHost + data.hashUrl, data.url];
+        var params =  [localHost + data.hashUrl, data.url, request.session["userId"]];
         err = false;
-        const result = db.run(sql, params, function(err, result) {
+        db.run(sql, params, function(err, result) {
             if (err) {
                 //return does not interrupt processing as its the callback from the DB.
                 response.status(400).json({"error" : err.message});
@@ -111,8 +110,8 @@ app.search("/shorten", function(request, response) {
         return;
     }
     try {
-        let sql = "SELECT * from url WHERE hashUrl = ?";
-        let params = [hashUrl];
+        let sql = "SELECT * from url WHERE hashUrl = ? and username = ?";
+        let params = [hashUrl, request.session["userId"]];
         var originalUrl = "";
         //the absence of errMessage inadvertently made loc 108-119 stop the api endpoint.
         //var errMessage = "";
@@ -121,7 +120,7 @@ app.search("/shorten", function(request, response) {
             if (err) {
                 console.log(err.message);
                 response.status(500).json({
-                    "message": err.message
+                    "message": "Please contact system administrator: ERR - " + err.message
                 })
             }
             else if (result) {
@@ -151,8 +150,8 @@ app.delete("/shorten", function(request, response){
         return;
     }
     //check for the existence of the row: we don't need as the DMBS implements this check (i suppose, most DBMS does.)
-    var sql = "DELETE FROM url where hashUrl = ?";
-    var params = [hashedUrl];
+    var sql = "DELETE FROM url where hashUrl = ? and username = ?";
+    var params = [hashedUrl, request.session["userId"]];
     db.run(sql, params, function(err,result) {
         if (err) {
             console.log(err.message);
@@ -174,6 +173,23 @@ app.delete("/shorten", function(request, response){
         }
     });
 });
+app.search("/urlcollection", function(request, response) {
+    var username = request.body["user"];
+    var sql = "SELECT hashUrl, origUrl from url where username = ?";
+    db.all(sql, [request.session["userId"]], function(err, result) {
+        if (err) {
+            response.status(500).json({
+                "message:": err.message
+            });
+        }
+        if (result) {
+            response.status(200).json({
+                "result": result
+            });
+        }
+    });
+
+});
 
 /*Authentication. this can be modularized.*/ 
 app.get("/logon", function(request, response) {
@@ -181,10 +197,10 @@ app.get("/logon", function(request, response) {
     var cookies = request.session;
     if (cookies) {
         //user already authenticated.
-        response.sendStatus(200).json({
+        response.status(200).json({
             "message" : "Welcome!",
             "username": cookies["userId"]
-        }).end();
+        });
     }
 });
 
@@ -243,7 +259,7 @@ app.post("/register", function(request, response){
         password = uuid.v5(password, uuid.v5.URL);
         var params = [username, password, email];
         var insertSql = "INSERT INTO user (username, password, email) VALUES (?,?,?)";
-        db.get(insertSql, params, function(err){
+        db.run(insertSql, params, function(err){
             if (err) {
                 throw err;
             }

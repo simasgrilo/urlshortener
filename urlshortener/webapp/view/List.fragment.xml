@@ -1,0 +1,29 @@
+<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc"
+             xmlns:core="sap.ui.core"
+             xmlns="sap.m">
+    <Dialog title="{i18n>urlListTitle}"> <!-- binding works exaclty as in a regular view. i18n is the model name, and > is to access the property in the model.-->
+        <content>
+            <Table id="urlList" items="{path: '/result'}"> <!-- if you rmodel is not named, this is the way to go.-->
+                <columns>
+                    <Column >
+                        <Text text="{i18n>urlListHash}"/>
+                    </Column>
+                    <Column >
+                        <Text text="{i18n>urlListOrig}"/>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem> 
+                        <cells>
+                            <Text text="{hashUrl}"></Text>
+                            <Text text="{origUrl}"></Text>
+                        </cells> 
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+        <endButton>
+            <Button id="urlListCancel" press="onListCancelPress" text="Close"></Button>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition> 

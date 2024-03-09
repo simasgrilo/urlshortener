@@ -25,7 +25,7 @@
                 <Toolbar>
                     <Title text="URL Shortener"/>
                     <ToolbarSpacer/>
-                    <Button id="displayHash" text="Hashes" icon="sap-icon://drop-down-list" width="100px" ></Button>
+                    <Button id="displayHash" text="Hashes" icon="sap-icon://drop-down-list" width="100px" press="onListPress"></Button>
                 </Toolbar>
             </form:toolbar>
             <form:formContainers>

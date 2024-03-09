@@ -85,7 +85,7 @@
         },
         {
           "name": "main",
-          "pattern": "main",
+          "pattern": "main/:username:",
           "target": [
             "main"
           ]
