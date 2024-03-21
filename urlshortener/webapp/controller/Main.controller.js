@@ -3,7 +3,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Dialog",
     "sap/m/Button",
-    "sap/m/Text"
+    "sap/m/Text",
 ],
     function(Controller, Label, Dialog, Button, Text) {
         "use strict";
@@ -19,11 +19,9 @@ sap.ui.define([
                 //triggers when this controller is acessed via routing.
                 var oArguments = oEvent.getParameter("arguments");
                 this._sUser = oArguments["user"];
-                console.log(this._sUser);
             },
 
             onHashPress : function(oEvent) {
-
                 var sText = this.getView().byId("originalUrl").getValue();
                 var oFormData = {
                     "url" : sText
@@ -91,11 +89,9 @@ sap.ui.define([
                     data: JSON.stringify(sText),
                     statusCode: {
                         302: function(response){
-                            console.log("success");
                             that.setDialog(response.responseJSON['message']['origUrl']);
                         },
                         404: function(response){
-                            console.log("failure");
                             that.setDialog(response.responseJSON['message']);
                         },
                         500: function(response){
@@ -109,6 +105,25 @@ sap.ui.define([
                         that.setDialog(response["responseText"]);
                     }
                 })
+            },
+
+            onLogoutPress: function() {
+                //TODO invalidate cache in the server for the user.
+                var that = this;
+                $.ajax({
+                    type:"POST",
+                    url: "/urlservice/logoff",
+                    success: function(response) {
+                        var oRouter = that.getOwnerComponent().getRouter();
+                        //var sPreviousHash = History.getInstance().getPreviousHash();
+                        oRouter.navTo("login",{}, true);
+                    }, 
+                    error: function(response) {
+                        var oBundle = that.getView().getModel("i18n").getResourceBundle();
+                        var sDialogText = oBundle.getText("logoffFailure");
+                        that.setDialog(sDialogText);
+                    }
+                });
             },
             
             onListPress : function() {

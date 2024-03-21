@@ -10,6 +10,11 @@ sap.ui.define([
     return Controller.extend("com.urlshortener.grilo.urlshortener.controller.Login", {
         _oRegisterFragment : null,
 
+        onInit: function(){
+            var oRouter = this.getOwnerComponent().getRouter();
+            oRouter.attachRouteMatched(this._onRouteMatched, this);
+        },
+
         onBeforeRendering: function() {
             var that = this;
             $.ajax({
@@ -21,10 +26,18 @@ sap.ui.define([
                     })
                 },
                 error: function(response) {
-                    that.setDialog(response.responseJSON["message"]);
+                    if (response.responseJSON && response.responseJSON["message"]) { 
+                        that.setDialog(response.responseJSON["message"]);
+                    }
                 },
                 async: false
             });
+        },
+
+        _onRouteMatched : function(){
+            //clears the user/password input.
+            this.getView().byId("user").setValue();
+            this.getView().byId("pwd").setValue();
         },
 
         onLoginClick : function() {

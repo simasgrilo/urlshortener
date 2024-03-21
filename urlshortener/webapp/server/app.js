@@ -2,7 +2,6 @@ const express = require('express'); //not with a capital 'E'.
 const uuid = require('uuid');
 const winston = require('winston');
 const session = require('cookie-session');
-const cookieParser = require('cookie-parser');
 const app = express();
 
 //local imports (i.e., not set by npm) must include the directory (not required the FQN). without it, it will assume it's in node_modules.
@@ -195,13 +194,21 @@ app.search("/urlcollection", function(request, response) {
 app.get("/logon", function(request, response) {
     //checks whether the user is authenticated.
     var cookies = request.session;
-    if (cookies) {
+    if (cookies["userId"]) {
         //user already authenticated.
         response.status(200).json({
             "message" : "Welcome!",
             "username": cookies["userId"]
         });
     }
+    else {
+        response.sendStatus(401);
+    }
+});
+
+app.post("/logoff", function(request, response) {
+    request.session = null;
+   response.sendStatus(200); 
 });
 
 app.post("/auth", function(request, response) {

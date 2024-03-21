@@ -26,6 +26,7 @@
                     <Title text="URL Shortener"/>
                     <ToolbarSpacer/>
                     <Button id="displayHash" text="Hashes" icon="sap-icon://drop-down-list" width="100px" press="onListPress"></Button>
+                    <Button id="logoutButton" text="Logout" icon="sap-icon://log" press="onLogoutPress"></Button>
                 </Toolbar>
             </form:toolbar>
             <form:formContainers>
