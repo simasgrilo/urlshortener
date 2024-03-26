@@ -128,7 +128,13 @@ sap.ui.define([
                     },
                     error: function(response) {
                         //failure error is not prompting the dialog.
-                        that.setDialog(response.responseJSON["message"]);
+                        if (!response.responseJSON) {
+                            var oBundle = that.getView().getModel("i18n").getResourceBundle();
+                            that.setDialog(oBundle.getText("serverError"));
+                        }
+                        else {
+                            that.setDialog(response.responseJSON["message"]);
+                        }
                     }
 
                 });
