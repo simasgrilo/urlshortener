@@ -255,14 +255,18 @@ app.post("/register", function(request, response){
     var exists = false;
     //check whether username exists:
     const checkSql = "SELECT * FROM user WHERE username = ?";
-    db.run(checkSql, [username], function(err, result) {
-        if (result){
-            response.status(400).json({
-                "message": "Username {} already exists".format(username)
-            }).end()
-        }
+    db.all(checkSql, [username], function(err, result) {
+        _createAccount(username, password, email, result, response);
     });
-    if (username && password && email) {
+});
+
+var _createAccount = function (username, password, email, result, response) {
+    if (result){
+        response.status(400).json({
+            "message": "Username " + username + " already exists"
+        }).end()
+    }
+    else if (username && password && email) {
         password = uuid.v5(password, uuid.v5.URL);
         var params = [username, password, email];
         var insertSql = "INSERT INTO user (username, password, email) VALUES (?,?,?)";
@@ -286,4 +290,4 @@ app.post("/register", function(request, response){
             "message": "Missing either username, password or email. Please check and try again"
         });
     }
-});
+}
