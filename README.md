@@ -18,5 +18,9 @@ To run it locally, you need Node.js, UI5 tools for VSCode and these dependencies
     "@ui5/cli": "^3.0.0"
   },
 ```
+To run the Server, use the following command:
+```cd .\urlshortener\urlshortener\webapp\server | node app.js```
 
-  API server listens by default on port 3001, and the web application in port 8080. Remember if deployed in a server to remove the proxy in ui5.yaml!
+To execute the app locally you can either serve it as a local UI5 app or in the Fiori Launchpad instance provided with ui5-tools, just run ```npm start``` to check the app in the current FLP theme.
+
+  API server listens by default on port 3001, and the web application in port 8080. Remember if deployed in a server to remove the proxy config in ui5.yaml!
