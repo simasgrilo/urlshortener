@@ -27,7 +27,6 @@ sap.ui.define([
                         if (oType.getMetadata().getName() === this._input) {
                             oType.setValue("");
                         }
-                        console.log(oType);
                     }                    
                 }
             },
