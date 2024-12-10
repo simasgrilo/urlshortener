@@ -261,7 +261,7 @@ app.post("/register", function(request, response){
 });
 
 var _createAccount = function (username, password, email, result, response) {
-    if (result){
+    if (result && result.length > 1){
         response.status(400).json({
             "message": "Username " + username + " already exists"
         }).end()

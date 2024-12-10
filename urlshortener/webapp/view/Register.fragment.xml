@@ -5,7 +5,7 @@
     <!-- if you want your fragment as a popup, it should be a Dialog -->
     <Dialog title="Register">
         <content>
-        <form:SimpleForm>
+        <form:SimpleForm id="registerForm">
             <core:Title text="Register to use our services"></core:Title>
             <Label text="User name"></Label>
             <Input id="regUsername"></Input>

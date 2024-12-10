@@ -108,6 +108,7 @@ sap.ui.define([
                 MessageBox.information(sPassNotMatch, {
                     icon: MessageBox.Icon.ERROR
                 })
+                return;
             }
             var oPayload = {
                 username: sUser,
@@ -125,6 +126,7 @@ sap.ui.define([
                     data: JSON.stringify(oPayload),
                     success: function(response) {
                         that.setDialog(response["message"]);
+                        that.onFragmentClose(); 
                     },
                     error: function(response) {
                         //failure error is not prompting the dialog.
@@ -150,7 +152,20 @@ sap.ui.define([
         },
 
         onFragmentClose : function() {
+            this._clearRegisterFragment();
             this._oRegisterFragment.close();
+        },
+
+        _clearRegisterFragment : function() {
+            let aFragmentData = this.getView().byId("registerForm").getContent();
+            for (let oFragmentData of aFragmentData) {
+                try {
+                    oFragmentData.setValue("");
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+            }
         },
 
         setDialog : function(sDialogContent){
