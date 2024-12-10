@@ -8,17 +8,35 @@ sap.ui.define([
     function(Controller, Label, Dialog, Button, Text) {
         "use strict";
         return Controller.extend("com.urlshortener.grilo.urlshortener.controller.Main", {
+
             _sUser : null,
+
+            _input : 'sap.m.Input',
 
             onInit : function() {
                 var oRouter = this.getOwnerComponent().getRouter();
                 oRouter.attachRouteMatched(this.onRouteMatched, this);
             },
 
+            _clearFieldsOfForm : function() {
+                let oFormElements = this.getView().byId("mainForm").getFormContainers()[0].getFormElements();
+                for (let oObject of oFormElements) {
+                    let oObjContent = oObject.getFields();
+                    for (let oFormElement of oObjContent) {
+                        let oType = sap.ui.getCore().byId(oFormElement.getId());
+                        if (oType.getMetadata().getName() === this._input) {
+                            oType.setValue("");
+                        }
+                        console.log(oType);
+                    }                    
+                }
+            },
+
             onRouteMatched: function(oEvent) {
                 //triggers when this controller is acessed via routing.
                 var oArguments = oEvent.getParameter("arguments");
                 this._sUser = oArguments["user"];
+                this._clearFieldsOfForm();
             },
 
             onHashPress : function(oEvent) {
