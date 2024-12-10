@@ -3,6 +3,7 @@
         xmlns="sap.m">
         <Page title="{i18n>title}">
             <content>
+                <VBox height='150px'/>
                 <VBox renderType="Div" alignItems="Center">
                 <form:SimpleForm>   
                     <form:content>
